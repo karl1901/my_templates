@@ -1,0 +1,129 @@
+## @author karl的实体类模板
+## ------  实体类导包  --------
+package ${package.Entity};
+## ------  其他类导包  --------
+## 导入Swagger和自定义工具类包
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import ${package.Entity.substring(0,${package.Entity.lastIndexOf(".")})}.util.MyUtil;
+## 判定是否需要导入Date
+#foreach($field in ${table.fields})
+    #if(${field.propertyType.equals("LocalDateTime")} || ${field.propertyType.equals("LocalDate")})
+
+    import java.util.Date;
+        #break
+        ## 停止循环
+    #end
+    ## Date判断结束
+#end
+## ForEach循环结束
+
+## 排除视图
+#if(${table.comment} && ${table.comment.equals("VIEW")})
+    ## 如果为视图，停止生成
+    #break
+#end
+## 表名和作者注释
+/**
+    ## 判断数据库表名注释是否存在，不存在就不生成表名注解
+    #if(${table.comment})
+     *
+        ## 判断数据库表名注释是否存在“表”字，且“表”不为注释首字
+        #if(${table.comment.lastIndexOf("表")} > 0)
+         * ${table.comment.substring(0,${table.comment.lastIndexOf("表")})}类
+        #else
+         * ${table.comment}类
+        #end
+        ## 表名注释判断结束
+     *
+    #end
+ * @author ${author}
+ */
+#if(${entityLombokModel})
+@Data
+    #if(${superEntityClass})
+    @EqualsAndHashCode(callSuper = true)
+    #else
+    @EqualsAndHashCode(callSuper = false)
+    #end
+    #if(${chainModel})
+    @Accessors(chain = true)
+    #end
+#end
+
+## 无构造函数
+@NoArgsConstructor
+## Get方法
+@Getter
+## Set方法
+@Setter
+@ApiModel(value = "${entity}", description = "${table.comment.substring(0,${table.comment.lastIndexOf("表")})}")
+#if(${superEntityClass})
+public class ${entity} extends ${superEntityClass}#if(${activeRecord})<${entity}>#end {
+#elseif(${activeRecord})
+public class ${entity} extends Model<${entity}> {
+#else
+public class ${entity} {
+#end
+## ----------  BEGIN 字段循环遍历  ----------
+#foreach($field in ${table.fields})
+
+    #if(${field.keyFlag})
+        #set($keyPropertyName=${field.propertyName})
+    #end
+    ## ------  实体类属性注释  --------
+    ## 判断是否存在数据库表字段注释，不存在就不生成实体类注释
+    #if("$!field.comment" != "")
+        #if(${swagger2})
+        @ApiModelProperty(value = "${field.comment}")
+        #else
+        // ${field.comment}
+        #end
+    #end
+    #if(${field.keyFlag})
+        ## 主键(暂无注解)
+        ## 普通字段
+    #elseif(${field.fill})
+        ## -----   存在字段填充设置   -----
+        #if(${field.convert})
+        @TableField(value = "${field.annotationColumnName}", fill = FieldFill.${field.fill})
+        #else
+        @TableField(fill = FieldFill.${field.fill})
+        #end
+    #elseif(${field.convert})
+    @TableField("${field.annotationColumnName}")
+    #end
+    ## 乐观锁注解
+    #if(${versionFieldName}==${field.name})
+    @Version
+    #end
+    ## 逻辑删除注解
+    #if(${logicDeleteFieldName}==${field.name})
+    @TableLogic
+    #end
+    ## ------  实体类属性  --------
+    ## 时间类转换
+    #if(${field.propertyType.equals("LocalDateTime")} || ${field.propertyType.equals("LocalDate")})
+    @ApiModelProperty(value = "${field.comment}")
+    @ApiParam(hidden = true)
+    private Date ${field.propertyName};
+    #else
+    @ApiModelProperty(value = "${field.comment}")
+    @ApiParam(hidden = true)
+    private ${field.propertyType} ${field.propertyName};
+    #end
+#end
+
+## toString实体类打印方法
+#if(!${entityLombokModel})
+@Override
+public String toString() {
+        return MyUtil.jsonStringify(this);
+        }
+#end
+        }

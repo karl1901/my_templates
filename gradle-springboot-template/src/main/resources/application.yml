@@ -1,0 +1,59 @@
+server:
+  # 端口号
+  port: 2022
+  servlet:
+    # 项目访问路径
+    context-path: /games-rent-no-service
+mybatis:
+  # 指定MyBatis配置文件
+  config-location: classpath:mybatis-config.xml
+# SwaggerUI配置
+springfox:
+  documentation:
+    swagger-ui:
+      enabled: true
+spring:
+  # Redis配置
+  redis:
+    host: Redis地址
+    port: 6379
+    password: 密码
+    lettuce:
+      pool:
+        min-idle: 1
+        max-idle: 6
+        max-active: 10
+        max-wait: 1000
+      shutdown-timeout: 2000
+  # 启用代码热部署
+  devtools:
+    restart:
+      enabled: true
+  jackson:
+    # 不输出Null字段
+    default-property-inclusion: non-null
+    serialization:
+      # 启用日期类型输出为时间戳
+      write-dates-as-timestamps: true
+  # 数据源配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://数据库地址:3306/数据库名称?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2b8
+    username: 用户名
+    password: 密码
+    hikari:
+      # 掉线测试
+      connection-test-query: select 1
+      max-lifetime: 60000
+  # 文件上传配置
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 50MB
+      max-file-size: 10MB
+      max-request-size: 10MB
+pagehelper:
+  # 使用的数据库
+  helper-dialect: mysql
+  # 启用当前页码小于0时查询第一页
+  reasonable: true

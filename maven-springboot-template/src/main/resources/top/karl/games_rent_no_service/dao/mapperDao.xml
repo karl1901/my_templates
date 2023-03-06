@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="导入dao类">
+
+	<!-- 添加 -->
+	<insert id="mapper方法名" parameterType="请求的实体类名">
+		
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="mapper方法名" parameterType="请求的实体类名">
+		
+	</delete>
+
+	<!-- 修改 -->
+	<update id="mapper方法名" parameterType="请求的实体类名">
+		
+	</update>
+
+	<!-- 查询 -->
+	<select id="mapper方法名" parameterType="请求的实体类名"
+		resultType="返回的实体类名">
+		
+	</select>
+
+</mapper>

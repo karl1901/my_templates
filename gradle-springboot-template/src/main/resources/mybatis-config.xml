@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<!-- 实体类映射包 -->
+	<typeAliases>
+		<package name="项目包路径.entity" />
+	</typeAliases>
+
+	<!-- DAO层映射包 -->
+	<mappers>
+		<package name="项目包路径.dao" />
+	</mappers>
+
+</configuration>
