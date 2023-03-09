@@ -35,4 +35,25 @@ myTools.getCssText = (className) => {
   }
 };
 
+/**
+ * 动态生成路由信息
+ *
+ * @returns 路由信息数组
+ */
+myTools.sendRoutes = () => {
+  let files = require.context('../views/', true, /.vue$/);
+  let routes = [];
+  files.keys().forEach((k) => {
+    let filesModule = files(k);
+    let indexViews = filesModule.default.__file.indexOf('views/') + 6;
+    let names = filesModule.default.__file.substr(indexViews, filesModule.default.__file.indexOf('.vue') - indexViews);
+    routes.push({
+      path: filesModule.default.name === 'Home' ? '/' : '/' + names.toLowerCase(),
+      name: filesModule.default.name,
+      component: filesModule.default,
+    });
+  });
+  return routes;
+};
+
 export default myTools;

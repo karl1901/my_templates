@@ -1,15 +1,10 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import myTools from '../util/myTools';
 
 Vue.use(VueRouter);
 
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: () => import('../views/Home.vue')
-  },
-];
+const routes = myTools.sendRoutes();
 
 const router = new VueRouter({
   // url去#
